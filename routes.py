@@ -48,6 +48,6 @@ def submitted():
         password = request.form['password']
 
         # insert data into database
-        insert_data(name, website, pas)
+        insert_data(name, website, password)
 
     return render_template('submitted.html')
