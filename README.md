@@ -29,4 +29,4 @@ Run the app.py file
 ```
 $ python3 app.py
 ```
-Type in http://localhost:5000 into your browser to view the project live.
+Type in http://localhost:8000 into your browser to view the project live.
