@@ -1,5 +1,31 @@
 from flask import render_template, request, redirect, url_for
 import forms
+import random
+
+
+def generate_password():
+    password = ""
+    randrange = range(random.randint(20,26))
+    lower_case_alphabet = list(map(chr, range(97,123)))
+    upper_case_alphabet = list(map(chr, range(65,91)))
+    symbols = ['!','@','#','$','%','^','&','*','(',')']
+
+    for i in randrange:
+        randnum = random.randint(0,8)
+        randalph = random.randint(0,25)
+        randsymbol = random.randint(0,9)
+        char_choice = random.randint(0,3)
+
+        if (char_choice == 1):
+            password+=lower_case_alphabet[randalph]
+        elif (char_choice == 2):
+            password+=upper_case_alphabet[randalph]
+        elif (char_choice == 3):
+                    password+=symbols[randsymbol]
+        else:
+            password+=str(randnum)
+
+    return password
 
 """ 
 Generate the login form (using flask) for the index.html page, where you will 
@@ -45,7 +71,7 @@ def submitted():
     if request.method == 'POST':
         name = request.form['name']
         website = request.form['website']
-        password = request.form['password']
+        password = generate_password()
 
         # insert data into database
         insert_data(name, website, password)

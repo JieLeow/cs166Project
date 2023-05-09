@@ -1,7 +1,8 @@
 import routes
 from flask import Flask
 import os 
-from flask_sqlalchemy import SQLAlchemy 
+from flask_sqlalchemy import SQLAlchemy
+import random
 
 def create_the_database(db):
     db.create_all()
@@ -34,6 +35,31 @@ class User(db.Model):
     website = db.Column(db.Integer)
     password = db.Column(db.String(50))
 
+def generate_password():
+    password = ""
+    randrange = range(random.randint(20,26))
+    lower_case_alphabet = list(map(chr, range(97,123)))
+    upper_case_alphabet = list(map(chr, range(65,91)))
+    symbols = ['!','@','#','$','%','^','&','*','(',')']
+
+    for i in randrange:
+        randnum = random.randint(0,8)
+        randalph = random.randint(0,25)
+        randsymbol = random.randint(0,9)
+        char_choice = random.randint(0,3)
+
+        if (char_choice == 1):
+            password+=lower_case_alphabet[randalph]
+        elif (char_choice == 2):
+            password+=upper_case_alphabet[randalph]
+        elif (char_choice == 3):
+                    password+=symbols[randsymbol]
+        else:
+            password+=str(randnum)
+
+    return password
+
+
 def insert_data(name, website,password):
     new_user = User(name=name, website=website, password=password)
     db.session.add(new_user)
@@ -46,7 +72,7 @@ def modify_data(the_id, col_name, user_input):
     elif col_name == 'website':
         the_user.website = user_input 
     elif col_name == 'password':
-        the_user.password = user_input 
+        the_user.password = generate_password()
 
     db.session.commit() 
 
