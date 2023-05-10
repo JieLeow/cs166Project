@@ -17,15 +17,15 @@
 
     <form method="POST" action="{{ url_for('routes.submitted') }}">
       {{ form.csrf_token }}
-      {{ form.name.label }}
-      {{ form.name }}
+      <!-- {{ form.name.label }}
+      {{ form.name }} -->
       {{ form.website.label }}
       {{ form.website }}
 <!--      {{ form.password.label }}-->
 <!--      {{ form.password }}-->
       <button type="submit">Create Password!</button>
     </form>
-    <button><a href="{{ url_for('routes.view_database') }}">View Database</a></button>
+    <button><a href="{{ url_for('routes.view_database') }}">View Your Passwords</a></button>
 	</div>
 </body>
 </html>

@@ -130,8 +130,10 @@ def delete(the_id):
 def submitted():
     from app import insert_data
     if request.method == 'POST':
-        name = "".join(ch for ch in request.form['name'] if ch.isalnum())
-        website = "".join(ch for ch in request.form['website'] if ch.isalnum())
+        # name = "".join(ch for ch in request.form['name'] if ch.isalnum())
+        name = current_user.email
+        # website = "".join(ch for ch in request.form['website'] if ch.isalnum())
+        website = request.form['website']
         password = generate_password()
 
         hashed_password = current_user.password.encode()

@@ -4,7 +4,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 import random
 import routes
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin, current_user
 
 def create_the_database(db):
     db.create_all()
@@ -51,8 +51,8 @@ class authUser(UserMixin, db.Model):
     password = db.Column(db.String(100))
 
 # Create User Table
-class User(db.Model):
-    __tablename__ = 'Users'
+class Password(db.Model):
+    __tablename__ = 'Passwords'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     website = db.Column(db.Integer)
@@ -89,12 +89,12 @@ def create_user(email,password):
     db.session.commit()
 
 def insert_data(name, website,password):
-    new_user = User(name=name, website=website, password=password)
+    new_user = Password(name=name, website=website, password=password)
     db.session.add(new_user)
     db.session.commit()
 
 def modify_data(the_id, col_name, user_input):
-    the_user = User.query.filter_by(id=the_id).first()
+    the_user = Password.query.filter_by(id=the_id).first()
     if col_name == 'name':
         the_user.name = user_input
     elif col_name == 'website':
@@ -106,14 +106,15 @@ def modify_data(the_id, col_name, user_input):
 
 
 def delete_data(the_id):
-    the_user = User.query.filter_by(id=the_id).first()
+    the_user = Password.query.filter_by(id=the_id).first()
     db.session.delete(the_user)
     db.session.commit()
     
 
 def get_all_rows_from_table():
-    users = User.query.all()
-    return users 
+    # passwords = Password.query.all()
+    passwords = Password.query.filter_by(name=current_user.email).all()
+    return passwords 
     
 
 # if database does not exist in the current directory, create it!
