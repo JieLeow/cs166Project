@@ -23,7 +23,7 @@
             {% for row in rows %}
                 <tr>
                     <td>
-                        <form method='post' action="{{ url_for('delete', the_id=row.id) }}">
+                        <form method='post' action="{{ url_for('routes.delete', the_id=row.id) }}">
                             <label>{{ row.id }}</label>
                             <input type="checkbox" name="remove">
                             <br>
@@ -32,7 +32,7 @@
                     </td>
 
                     <td>
-                        <form method="post" action="{{ url_for('modify_database', the_id=row.id, modified_category='name') }}">
+                        <form method="post" action="{{ url_for('routes.modify_database', the_id=row.id, modified_category='name') }}">
                             <label>{{ row.name }}</label>
                             <input type="text" name="name" placeholder="Edit Name">
                             <br>
@@ -40,7 +40,7 @@
                         </form>
                     </td>
                     <td>
-                        <form method="post" action="{{ url_for('modify_database', the_id=row.id, modified_category='website') }}">
+                        <form method="post" action="{{ url_for('routes.modify_database', the_id=row.id, modified_category='website') }}">
                             <label>{{ row.website }}</label>
                             <input type="text" name="website" placeholder="Edit Website">
                             <br>
@@ -49,7 +49,7 @@
                     </td>
                     
                     <td>
-                        <form method="post" action="{{ url_for('modify_database', the_id=row.id, modified_category='password') }}">
+                        <form method="post" action="{{ url_for('routes.modify_database', the_id=row.id, modified_category='password') }}">
                             <label>{{ row.password }}</label>
                             <input type="text" name="password" placeholder="Edit Password">
                             <br>
@@ -61,6 +61,6 @@
         {% endif %}
     </table>
     <br>
-    <button><a href="{{ url_for('index') }}">Enter New User</a></button>
+    <button><a href="{{ url_for('routes.index') }}">Enter New User</a></button>
 </body>
 </html>
