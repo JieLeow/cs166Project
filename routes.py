@@ -16,25 +16,26 @@ import hashlib
 # regex all user input in input forms
 #
 
-hash_pw = 'asdfgh'
-# Convert password to bytes
-password = hash_pw.encode()
+# hash_pw = 'asdfgh'
+# # Convert password to bytes
+# password = hash_pw.encode()
 
-# Hash the password using a suitable algorithm
-hashed_password = hashlib.sha256(password).digest()
+# # Hash the password using a suitable algorithm
+#hashed_password = hashlib.sha256(password).digest()
 
 # Encode the hashed password using base64
-encoded_key = base64.urlsafe_b64encode(hashed_password)
+# encoded_key = base64.urlsafe_b64encode(hashed_password)
 
-cipher = Fernet(encoded_key)
+# cipher = Fernet(encoded_key)
 
-def encrypt(password):
+
+def encrypt(password, cipher):
     print("encrypting password" , password)
     encrypted_password = cipher.encrypt(password.encode())
     print("encrypted password: "  , encrypted_password)
     return encrypted_password
 
-def decrypt(password):
+def decrypt(password, cipher):
     decrypted_password = cipher.decrypt(password).decode()
     print("decrypted password: " , decrypted_password)
     return decrypted_password
@@ -88,9 +89,15 @@ def view_database():
     from app import get_all_rows_from_table
     rows = get_all_rows_from_table()
     #row = [user,website,password]
+
+    hashed_password = current_user.password.encode()
+    hashed_password = hashlib.sha256(hashed_password).digest()
+    encoded_key = base64.urlsafe_b64encode(hashed_password)
+    cipher = Fernet(encoded_key)
+    
     for row in rows:
         print(row.password)
-        row.password = decrypt(row.password)
+        row.password = decrypt(row.password, cipher)
 
     return render_template('entire_database.html', rows=rows)
 
@@ -127,8 +134,13 @@ def submitted():
         website = "".join(ch for ch in request.form['website'] if ch.isalnum())
         password = generate_password()
 
+        hashed_password = current_user.password.encode()
+        hashed_password = hashlib.sha256(hashed_password).digest()
+        encoded_key = base64.urlsafe_b64encode(hashed_password)
+        cipher = Fernet(encoded_key)
+
         # insert data into database
-        insert_data(name, website, encrypt(password))
+        insert_data(name, website, encrypt(password, cipher))
 
     return render_template('submitted.html')
 
