@@ -12,3 +12,4 @@ MarkupSafe==2.0.1
 SQLAlchemy==1.4.20
 Werkzeug==2.0.1
 WTForms==2.3.3
+cryptography==3.4.8

@@ -3,6 +3,42 @@ import forms
 import random
 from flask_login import login_user,logout_user,current_user,UserMixin, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
+from cryptography.fernet import Fernet
+import base64
+import hashlib
+
+
+# REFERENCE: https://www.scaler.com/topics/remove-special-characters-from-string-python/
+
+# hash_pw = the hash of the password that the user logs in with, stored as a session variable
+# this way we aren't vulnerable to a XSS attack that gets session variables
+# if they get this, they only have hash of the pw not the real pw
+# regex all user input in input forms
+#
+
+hash_pw = 'asdfgh'
+# Convert password to bytes
+password = hash_pw.encode()
+
+# Hash the password using a suitable algorithm
+hashed_password = hashlib.sha256(password).digest()
+
+# Encode the hashed password using base64
+encoded_key = base64.urlsafe_b64encode(hashed_password)
+
+cipher = Fernet(encoded_key)
+
+def encrypt(password):
+    print("encrypting password" , password)
+    encrypted_password = cipher.encrypt(password.encode())
+    print("encrypted password: "  , encrypted_password)
+    return encrypted_password
+
+def decrypt(password):
+    decrypted_password = cipher.decrypt(password).decode()
+    print("decrypted password: " , decrypted_password)
+    return decrypted_password
+
 
 bp = Blueprint('routes', __name__)
 
@@ -51,7 +87,11 @@ The view_database() route method is called from app.py
 def view_database():
     from app import get_all_rows_from_table
     rows = get_all_rows_from_table()
-    
+    #row = [user,website,password]
+    for row in rows:
+        print(row.password)
+        row.password = decrypt(row.password)
+
     return render_template('entire_database.html', rows=rows)
 
 @bp.route('/modify<the_id>/<modified_category>', methods=['POST'])
@@ -83,12 +123,12 @@ def delete(the_id):
 def submitted():
     from app import insert_data
     if request.method == 'POST':
-        name = request.form['name']
-        website = request.form['website']
+        name = "".join(ch for ch in request.form['name'] if ch.isalnum())
+        website = "".join(ch for ch in request.form['website'] if ch.isalnum())
         password = generate_password()
 
         # insert data into database
-        insert_data(name, website, password)
+        insert_data(name, website, encrypt(password))
 
     return render_template('submitted.html')
 

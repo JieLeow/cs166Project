@@ -25,35 +25,35 @@
                     <td>
                         <form method='post' action="{{ url_for('routes.delete', the_id=row.id) }}">
                             <label>{{ row.id }}</label>
-                            <input type="checkbox" name="remove">
-                            <br>
-                            <input type="submit" value="DELETE">
+<!--                            <input type="checkbox" name="remove">-->
+<!--                            <br>-->
+<!--                            <input type="submit" value="DELETE">-->
                         </form>
                     </td>
 
                     <td>
                         <form method="post" action="{{ url_for('routes.modify_database', the_id=row.id, modified_category='name') }}">
                             <label>{{ row.name }}</label>
-                            <input type="text" name="name" placeholder="Edit Name">
-                            <br>
-                            <input type="submit" value="SUBMIT">
+<!--                            <input type="text" name="name" placeholder="Edit Name">-->
+<!--                            <br>-->
+<!--                            <input type="submit" value="SUBMIT">-->
                         </form>
                     </td>
                     <td>
                         <form method="post" action="{{ url_for('routes.modify_database', the_id=row.id, modified_category='website') }}">
                             <label>{{ row.website }}</label>
-                            <input type="text" name="website" placeholder="Edit Website">
-                            <br>
-                            <input type="submit" value="SUBMIT">
+<!--                            <input type="text" name="website" placeholder="Edit Website">-->
+<!--                            <br>-->
+<!--                            <input type="submit" value="SUBMIT">-->
                         </form>
                     </td>
-                    
+
                     <td>
                         <form method="post" action="{{ url_for('routes.modify_database', the_id=row.id, modified_category='password') }}">
                             <label>{{ row.password }}</label>
-                            <input type="text" name="password" placeholder="Edit Password">
-                            <br>
-                            <input type="submit" value="SUBMIT">
+<!--                            <input type="text" name="password" placeholder="Edit Password">-->
+<!--                            <br>-->
+<!--                            <input type="submit" value="SUBMIT">-->
                         </form>
                     </td>
                 </tr>
