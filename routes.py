@@ -1,6 +1,32 @@
 from flask import render_template, request, redirect, url_for
 import forms
 import random
+from cryptography.fernet import Fernet
+import base64
+import hashlib
+
+
+hash_pw = 'asdfgh'
+# Convert password to bytes
+password = hash_pw.encode()
+
+# Hash the password using a suitable algorithm
+hashed_password = hashlib.sha256(password).digest()
+
+# Encode the hashed password using base64
+encoded_key = base64.urlsafe_b64encode(hashed_password)
+
+cipher = Fernet(encoded_key)
+
+def encrypt(password):
+    encrypted_password = cipher.encrypt(password.encode())
+    return encrypted_password
+
+def decrypt(password):
+    decrypted_password = cipher.decrypt(password).decode()
+    print(decrypted_password)
+    return decrypted_password
+
 
 
 def generate_password():
@@ -44,7 +70,11 @@ The view_database() route method is called from app.py
 def view_database():
     from app import get_all_rows_from_table
     rows = get_all_rows_from_table()
-    
+    #row = [user,website,password]
+    for row in rows:
+        print(row.password)
+        row.password = decrypt(row.password)
+
     return render_template('entire_database.html', rows=rows)
 
 def modify_database(the_id ,modified_category):
@@ -74,6 +104,6 @@ def submitted():
         password = generate_password()
 
         # insert data into database
-        insert_data(name, website, password)
+        insert_data(name, website, encrypt(password))
 
     return render_template('submitted.html')
