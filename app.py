@@ -1,31 +1,54 @@
-import routes
+# import routes
 from flask import Flask
 import os 
 from flask_sqlalchemy import SQLAlchemy
 import random
+import routes
+from flask_login import LoginManager, UserMixin
 
 def create_the_database(db):
     db.create_all()
 
 
 app = Flask(__name__)
+
+# Register the routes blueprint
+app.register_blueprint(routes.bp)
+
 app.config['SECRET_KEY'] = 'A secret'
+
+
 
 all_methods = ['GET', 'POST']
 
-# Home page (where you will add a new user)
-app.add_url_rule('/', view_func=routes.index)
-# "Thank you for submitting your form" page
-app.add_url_rule('/submitted', methods=all_methods, view_func=routes.submitted)
-# Viewing all the content in the database page
-app.add_url_rule('/database', view_func=routes.view_database)
-app.add_url_rule('/modify<the_id>/<modified_category>', methods=all_methods, view_func=routes.modify_database)
-app.add_url_rule('/delete<the_id>', methods=all_methods, view_func=routes.delete)
+# # Home page (where you will add a new user)
+# app.add_url_rule('/', view_func=routes.index)
+# # "Thank you for submitting your form" page
+# app.add_url_rule('/submitted', methods=all_methods, view_func=routes.submitted)
+# # Viewing all the content in the database page
+# app.add_url_rule('/database', view_func=routes.view_database)
+# app.add_url_rule('/modify<the_id>/<modified_category>', methods=all_methods, view_func=routes.modify_database)
+# app.add_url_rule('/delete<the_id>', methods=all_methods, view_func=routes.delete)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # no warning messages
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///info.db' # for using the sqlite database
 
 db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.login_view = 'routes.login'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    # since the user_id is just the primary key of our user table, use it in the query for the user
+    print(user_id)
+    return authUser.query.get(int(user_id))
+
+class authUser(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
 
 # Create User Table
 class User(db.Model):
@@ -59,6 +82,11 @@ def generate_password():
 
     return password
 
+
+def create_user(email,password):
+    new_user = authUser(email=email, password=password)
+    db.session.add(new_user)
+    db.session.commit()
 
 def insert_data(name, website,password):
     new_user = User(name=name, website=website, password=password)
