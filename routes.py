@@ -5,6 +5,9 @@ from cryptography.fernet import Fernet
 import base64
 import hashlib
 
+
+# REFERENCE: https://www.scaler.com/topics/remove-special-characters-from-string-python/
+
 # hash_pw = the hash of the password that the user logs in with, stored as a session variable
 # this way we aren't vulnerable to a XSS attack that gets session variables
 # if they get this, they only have hash of the pw not the real pw
@@ -106,8 +109,8 @@ def delete(the_id):
 def submitted():
     from app import insert_data
     if request.method == 'POST':
-        name = request.form['name']
-        website = request.form['website']
+        name = "".join(ch for ch in request.form['name'] if ch.isalnum())
+        website = "".join(ch for ch in request.form['website'] if ch.isalnum())
         password = generate_password()
 
         # insert data into database
