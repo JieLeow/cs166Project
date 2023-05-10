@@ -5,6 +5,11 @@ from cryptography.fernet import Fernet
 import base64
 import hashlib
 
+# hash_pw = the hash of the password that the user logs in with, stored as a session variable
+# this way we aren't vulnerable to a XSS attack that gets session variables
+# if they get this, they only have hash of the pw not the real pw
+# regex all user input in input forms
+#
 
 hash_pw = 'asdfgh'
 # Convert password to bytes
@@ -19,12 +24,14 @@ encoded_key = base64.urlsafe_b64encode(hashed_password)
 cipher = Fernet(encoded_key)
 
 def encrypt(password):
+    print("encrypting password" , password)
     encrypted_password = cipher.encrypt(password.encode())
+    print("encrypted password: "  , encrypted_password)
     return encrypted_password
 
 def decrypt(password):
     decrypted_password = cipher.decrypt(password).decode()
-    print(decrypted_password)
+    print("decrypted password: " , decrypted_password)
     return decrypted_password
 
 
